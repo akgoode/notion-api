@@ -4,16 +4,25 @@ const notion = new NotionService()
 
 const routerFactory = require('express').Router
 
-const createRouter = db => {
+const createRouter = dbName => {
     const router = routerFactory()
     
-    const dbName = notion.initializeDb(db)
 
 
     router.get('/', async (req, res) => {
         console.log(`getting ${dbName}`)
         const items = await notion.list(dbName)
         res.send(items)
+    })
+
+    router.get('/:id', async (req, res) => {
+        const id = req.params.id
+        console.log(`getting ${id} from ${dbName}`)
+        const item = await notion.get(id)
+        if(item) {
+            res.send(item)
+        }
+        res.status(404).send()
     })
 
     router.post('/', async (req, res) => {
@@ -37,7 +46,8 @@ const createDBRouters = async () => {
         const dbs = allDbs.results.filter(db => db.object === 'database')
         const apiRouter = routerFactory()
         dbs.forEach(db => {
-            apiRouter.use(`/${db.title[0].plain_text}`, createRouter(db))
+            const dbName = notion.initializeDb(db)
+            apiRouter.use(`/${dbName}`, createRouter(dbName))
         })
         return apiRouter
     } catch (e) {

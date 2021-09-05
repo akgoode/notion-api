@@ -34,12 +34,12 @@ class NotionService {
         })
 
         this.dbMaps[dbName] = body => {
-            Object.keys(body).forEach(property => {
-                const ids = idLookup[property.toLowerCase()]
+            Object.entries(body).forEach(([key, value]) => {
+                const ids = idLookup[key.toLowerCase()]
                 const validProp = ids.find(id => isPropertyValid(id) && properties[id])
                 const dataTypeFunction = dataTypeValues[properties[validProp].type]
                 if(isPropertyValid(validProp)) {
-                    template.properties[validProp] = dataTypeFunction(body[property])
+                    template.properties[validProp] = dataTypeFunction(value)
                 }
             })
             return template
@@ -61,6 +61,10 @@ class NotionService {
 
     async list(dbName) {
         return this.notion.databases.query({ database_id: this.getDbId(dbName) })
+    }
+    
+    async get(id) {
+        return this.notion.pages.retrieve({ page_id: id })
     }
 
     async create(dbName, body) {
