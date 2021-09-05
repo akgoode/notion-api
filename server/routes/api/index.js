@@ -6,11 +6,10 @@ const routerFactory = require('express').Router
 
 const createRouter = db => {
     const router = routerFactory()
-    const dbName = db.title[0].plain_text,
-          id = db.id
-    notion.setDbId(dbName, id)
-
     
+    const dbName = notion.initializeDb(db)
+
+
     router.get('/', async (req, res) => {
         console.log(`getting ${dbName}`)
         const items = await notion.list(dbName)
@@ -19,8 +18,12 @@ const createRouter = db => {
 
     router.post('/', async (req, res) => {
         const body = req.body
-        const response = await notion.create(dbName, body)
-        res.send(response);
+        if(body) {
+            const response = await notion.create(dbName, body)
+            res.send(response);
+        } else {
+            res.status(400).json({error: 'Bad Request'})
+        }
     })
     // console.log(router)
 
