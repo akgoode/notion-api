@@ -11,8 +11,8 @@ module.exports = notion => {
 
     router.post('/', async (req, res) => {
         const body = req.body;
-        console.log(body);
-        res.send(body);
+        const response = await notion.createItem(body)
+        res.send(response);
     })
 
     return router

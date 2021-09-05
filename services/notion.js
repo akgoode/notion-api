@@ -1,20 +1,21 @@
 const { Client } = require("@notionhq/client")
+const { createItemBody } = require('../helpers/notion-utils')
 
-const notion = new Client({
-  auth: process.env.NOTIONKEY,
-})
 
 class NotionService {
     constructor() {
-
+        this.notion = new Client({
+            auth: process.env.NOTIONKEY,
+        })
     }
 
     async getItems() {
-        return notion.databases.query({ database_id: process.env.DATABASEID })
+        return this.notion.databases.query({ database_id: process.env.DATABASEID })
     }
 
-    async createItem() {
-
+    async createItem(body) {
+        const notionPayload = createItemBody(body)
+        return this.notion.pages.create(notionPayload)
     }
 }
 
