@@ -1,12 +1,11 @@
-const databaseId = process.env.DATABASEID
 
-const createItemBody = req => {
+const createItemBody = (dbId, req) => {
 
     const itemBodyTemplate = req => {
         const getTags = () => ({multi_select: req.tags.map(tag => ({ name: tag }))})
         return {
             parent: {
-                database_id: databaseId
+                database_id: dbId
             },
             properties: {
                 Name: {

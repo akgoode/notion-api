@@ -3,18 +3,31 @@ const { createItemBody } = require('../helpers/notion-utils')
 
 
 class NotionService {
-    constructor() {
+    constructor(notionToken) {
         this.notion = new Client({
-            auth: process.env.NOTIONKEY,
+            auth: notionToken || process.env.NOTIONKEY,
         })
+        this.dbs = {}
     }
 
-    async getItems() {
-        return this.notion.databases.query({ database_id: process.env.DATABASEID })
+    setDbId(key, id) {
+        this.dbs[key] = id
     }
 
-    async createItem(body) {
-        const notionPayload = createItemBody(body)
+    getDbId(key) {
+        return this.dbs[key]
+    }
+
+    listDatabases() {
+        return this.notion.search()
+    }
+
+    async list(dbName) {
+        return this.notion.databases.query({ database_id: this.getDbId(dbName) })
+    }
+
+    async create(dbName, body) {
+        const notionPayload = createItemBody(this.getDbId(dbName), body)
         return this.notion.pages.create(notionPayload)
     }
 }
