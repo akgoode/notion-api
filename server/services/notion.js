@@ -37,8 +37,8 @@ class NotionService {
             Object.entries(body).forEach(([key, value]) => {
                 const ids = idLookup[key.toLowerCase()]
                 const validProp = ids.find(id => isPropertyValid(id) && properties[id])
-                const dataTypeFunction = dataTypeValues[properties[validProp].type]
-                if(isPropertyValid(validProp)) {
+                if(validProp) {
+                    const dataTypeFunction = dataTypeValues[properties[validProp].type]
                     template.properties[validProp] = dataTypeFunction(value)
                 }
             })
