@@ -10,7 +10,7 @@ class NotionService {
     }
 
     async getItems() {
-        notion.databases.query({ database_id: process.env.DATABASEID })
+        return notion.databases.query({ database_id: process.env.DATABASEID })
     }
 
     async createItem() {

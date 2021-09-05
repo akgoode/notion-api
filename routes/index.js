@@ -1,9 +1,5 @@
-const NotionService = require('../services/notion')
-
-const notion = new NotionService()
-
-const itemsRouter = require('./items')(notion)
+const api = require('./api')
 
 module.exports = app => {
-    app.use('/api/items', itemsRouter)
+    app.use('/api', api)
 }
