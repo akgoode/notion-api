@@ -1,15 +1,10 @@
-const NotionService = require('../services/notion')
-
-const notion = new NotionService()
-
-module.exports = async () => {
+module.exports = async client => {
     try {
-        const allDbs = await notion.listDatabases()
+        const allDbs = await client.listDatabases()
         const dbs = allDbs.results.filter(db => db.object === 'database')
-        console.log(dbs)
-        // dbs.forEach(console.log)
         return dbs
     } catch(e) {
         console.log(e)
+        return []
     }
 }

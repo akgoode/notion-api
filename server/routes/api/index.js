@@ -1,4 +1,4 @@
-
+const getDbs = require('../../databases/dbs')
 const NotionService = require('../../services/notion')
 const notion = new NotionService()
 
@@ -42,9 +42,8 @@ const createRouter = dbName => {
 
 const createDBRouters = async () => {
     try {
-        const allDbs = await notion.listDatabases()
-        const dbs = allDbs.results.filter(db => db.object === 'database')
         const apiRouter = routerFactory()
+        const dbs = await getDbs(notion)
         dbs.forEach(db => {
             const dbName = notion.initializeDb(db)
             apiRouter.use(`/${dbName}`, createRouter(dbName))
