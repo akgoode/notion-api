@@ -1,4 +1,4 @@
-const getDbs = require('../../databases/dbs')
+const getDbs = require('../../startup/dbs')
 const NotionService = require('../../services/notion')
 const notion = new NotionService()
 
