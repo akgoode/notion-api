@@ -1,5 +1,7 @@
 FROM node
 
+WORKDIR /usr/src/notion-api
+
 COPY package*.json ./
 
 RUN npm install
