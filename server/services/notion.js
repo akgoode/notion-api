@@ -8,7 +8,7 @@ class NotionService {
             auth: notionToken || process.env.NOTIONKEY,
         })
         this.dbIds = {}
-        this.dbMaps = {}
+        this.dbMappingFunctions = {}
     }
 
     setDbId(key, id) {
@@ -33,7 +33,7 @@ class NotionService {
             return prop
         })
 
-        this.dbMaps[dbName] = body => {
+        this.dbMappingFunctions[dbName] = body => {
             Object.entries(body).forEach(([key, value]) => {
                 const ids = idLookup[key.toLowerCase()]
                 const validProp = ids.find(id => isPropertyValid(id) && properties[id])
@@ -48,7 +48,7 @@ class NotionService {
 
     initializeDb(db) {
         const dbName = db.title[0].plain_text,
-        id = db.id
+              id = db.id
 
         this.setDbId(dbName, id)
         this.mapRequestToDbRecord(db, dbName)
@@ -59,16 +59,16 @@ class NotionService {
         return this.notion.search()
     }
 
-    async list(dbName) {
+    list(dbName) {
         return this.notion.databases.query({ database_id: this.getDbId(dbName) })
     }
     
-    async get(id) {
+    get(id) {
         return this.notion.pages.retrieve({ page_id: id })
     }
 
-    async create(dbName, body) {
-        const notionPayload = this.dbMaps[dbName](body)
+    create(dbName, body) {
+        const notionPayload = this.dbMappingFunctions[dbName](body)
         console.log(notionPayload)
         return this.notion.pages.create(notionPayload)
     }
