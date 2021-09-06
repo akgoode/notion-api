@@ -36,7 +36,7 @@ class NotionService {
         this.dbMappingFunctions[dbName] = body => {
             Object.entries(body).forEach(([key, value]) => {
                 const ids = idLookup[key.toLowerCase()]
-                const validProp = ids.find(id => isPropertyValid(id) && properties[id])
+                const validProp = ids && ids.find(id => isPropertyValid(id) && properties[id])
                 if(validProp) {
                     const dataTypeFunction = dataTypeValues[properties[validProp].type]
                     template.properties[validProp] = dataTypeFunction(value)
