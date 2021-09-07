@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notion-api-deployment
+  labels:
+    app: notion-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: notion-api
+  template:
+    metadata:
+      labels:
+        app: notion-api
+    spec:
+      containers:
+      - name: notion-api
+        image: akgoode/notion-api
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
